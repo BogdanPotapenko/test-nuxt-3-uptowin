@@ -44,7 +44,6 @@
         <tr
           v-for="user in users"
           :key="user.id"
-          data-row
         >
           <td>{{ user.name }}</td>
           <td class="table__muted">{{ user.email }}</td>
@@ -98,7 +97,7 @@ const emit = defineEmits<{
 }>()
 
 const wrapper = useTemplateRef<HTMLElement>('wrapper')
-const capacity = useTableCapacity(wrapper, () => props.users.length)
+const capacity = useTableCapacity(wrapper)
 
 watch(capacity, (rows) => {
   if (rows > 0) emit('capacity', rows)
@@ -121,7 +120,7 @@ function sortIconFor(field: SortField): string {
 <style scoped>
 .table-wrapper {
   flex: 1;
-  min-height: 240px;
+  min-height: 160px;
   overflow: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -137,12 +136,17 @@ function sortIconFor(field: SortField): string {
 
 .table th,
 .table td {
-  padding: 10px 14px;
+  padding: 0 14px;
   text-align: left;
   white-space: nowrap;
 }
 
+.table tbody td {
+  height: var(--table-row-height);
+}
+
 .table thead th {
+  height: var(--table-head-height);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -194,11 +198,19 @@ function sortIconFor(field: SortField): string {
   color: var(--accent);
 }
 
-.table__empty {
+.table tbody td.table__empty {
+  height: auto;
   padding: 40px 14px;
   color: var(--text-muted);
   text-align: center;
   white-space: normal;
+}
+
+@media (max-width: 640px) {
+  .table th,
+  .table td {
+    padding: 0 10px;
+  }
 }
 
 .badge {

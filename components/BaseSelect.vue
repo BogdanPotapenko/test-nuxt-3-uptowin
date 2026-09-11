@@ -56,6 +56,7 @@ const normalizedOptions = computed<SelectOption<T>[]>(() =>
 
 <style scoped>
 .select {
+  padding-right: 32px;
   cursor: pointer;
 }
 </style>

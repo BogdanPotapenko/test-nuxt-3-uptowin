@@ -29,8 +29,8 @@ useHead({
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   max-width: 1040px;
   margin: 0 auto;
   padding: 32px 20px;
@@ -61,5 +61,20 @@ useHead({
 .layout__subtitle {
   margin: 4px 0 0;
   color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .layout {
+    padding: 20px 12px 28px;
+  }
+
+  .layout__header {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .layout__title {
+    font-size: 20px;
+  }
 }
 </style>

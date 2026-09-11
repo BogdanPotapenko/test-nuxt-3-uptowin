@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import type { SelectOption } from '~/types/ui'
 import type { PerPageOption } from '~/types/user'
-import { PER_PAGE_AUTO, PER_PAGE_OPTIONS } from '~/types/user'
+import { PER_PAGE_AUTO, PER_PAGE_CHOICES } from '~/types/user'
 import { PAGE_ELLIPSIS, buildPageItems } from '~/utils/pagination'
 
 const props = defineProps<{
@@ -92,10 +92,10 @@ const emit = defineEmits<{ change: [page: number] }>()
 
 const perPage = defineModel<PerPageOption>('perPage', { required: true })
 
-const options: SelectOption<PerPageOption>[] = [
-  { value: PER_PAGE_AUTO, label: 'Auto' },
-  ...PER_PAGE_OPTIONS.map(value => ({ value, label: String(value) })),
-]
+const options: SelectOption<PerPageOption>[] = PER_PAGE_CHOICES.map(value => ({
+  value,
+  label: value === PER_PAGE_AUTO ? 'Auto' : String(value),
+}))
 
 const items = computed(() => buildPageItems(props.page, props.totalPages))
 
@@ -154,5 +154,22 @@ function onPerPageChange(value: PerPageOption | null): void {
   min-width: 24px;
   color: var(--text-muted);
   text-align: center;
+}
+
+@media (max-width: 640px) {
+  .pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .pagination__status {
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .pagination__list {
+    justify-content: center;
+  }
 }
 </style>

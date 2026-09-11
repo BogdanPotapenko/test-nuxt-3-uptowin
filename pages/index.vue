@@ -12,7 +12,7 @@
       :sort-by="sortBy"
       :sort-direction="sortDirection"
       @sort="toggleSort"
-      @capacity="autoPageSize = $event"
+      @capacity="onCapacity"
     >
       <template #empty>
         No users match the current filters.
@@ -35,7 +35,31 @@
 import { DEFAULT_PER_PAGE } from '~/types/user'
 import { users as allUsers } from '~/data/users'
 
-const autoPageSize = ref<number>(DEFAULT_PER_PAGE)
+const AUTO_PAGE_SIZE_COOKIE = 'autoPageSize'
+const ONE_YEAR = 60 * 60 * 24 * 365
+const MAX_AUTO_PAGE_SIZE = 100
+
+function normalizeCapacity(value: unknown): number {
+  const parsed = Number(value)
+
+  return Number.isSafeInteger(parsed) && parsed >= 1
+    ? Math.min(parsed, MAX_AUTO_PAGE_SIZE)
+    : DEFAULT_PER_PAGE
+}
+
+const autoPageSizeCookie = useCookie<number>(AUTO_PAGE_SIZE_COOKIE, {
+  default: () => DEFAULT_PER_PAGE,
+  sameSite: 'lax',
+  path: '/',
+  maxAge: ONE_YEAR,
+})
+
+const autoPageSize = ref(normalizeCapacity(autoPageSizeCookie.value))
+
+function onCapacity(rows: number): void {
+  autoPageSize.value = rows
+  autoPageSizeCookie.value = rows
+}
 
 const {
   search,

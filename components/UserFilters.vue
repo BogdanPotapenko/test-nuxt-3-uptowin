@@ -85,4 +85,23 @@ watch(search, (value) => {
 .filters__reset {
   margin-left: auto;
 }
+
+@media (max-width: 640px) {
+  .filters {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .filters__search {
+    flex: 1 1 100%;
+  }
+
+  .filters .field {
+    flex: 1 1 auto;
+  }
+
+  .filters__reset {
+    margin-left: 0;
+  }
+}
 </style>

@@ -13,6 +13,8 @@ export type PerPage = (typeof PER_PAGE_OPTIONS)[number]
 export const PER_PAGE_AUTO = 'auto'
 export type PerPageOption = PerPage | typeof PER_PAGE_AUTO
 
+export const PER_PAGE_CHOICES: readonly PerPageOption[] = [PER_PAGE_AUTO, ...PER_PAGE_OPTIONS]
+
 export const DEFAULT_PER_PAGE: PerPage = 10
 export const DEFAULT_SORT_DIRECTION: SortDirection = 'asc'
 

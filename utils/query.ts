@@ -25,10 +25,18 @@ export function searchCodec(maxLength = 100): QueryCodec<string> {
   }
 }
 
-export function enumCodec<T extends string>(allowed: readonly T[], fallback: T): QueryCodec<T> {
+export function optionCodec<T extends string | number>(
+  allowed: readonly T[],
+  fallback: T,
+): QueryCodec<T> {
   return {
-    parse: raw => matchEnum(raw, allowed) ?? fallback,
-    serialize: value => (value === fallback ? undefined : value),
+    parse: (raw) => {
+      const value = firstQueryValue(raw)
+      if (value === null) return fallback
+
+      return allowed.find(option => String(option) === value) ?? fallback
+    },
+    serialize: value => (value === fallback ? undefined : String(value)),
   }
 }
 
@@ -36,23 +44,6 @@ export function nullableEnumCodec<T extends string>(allowed: readonly T[]): Quer
   return {
     parse: raw => matchEnum(raw, allowed),
     serialize: value => value ?? undefined,
-  }
-}
-
-export function numericEnumCodec<T extends number, F extends string | number = T>(
-  allowed: readonly T[],
-  fallback: F,
-): QueryCodec<T | F> {
-  return {
-    parse: (raw) => {
-      const value = firstQueryValue(raw)
-      if (value === null) return fallback
-
-      const parsed = Number(value)
-
-      return (allowed as readonly number[]).includes(parsed) ? (parsed as T) : fallback
-    },
-    serialize: value => (value === fallback ? undefined : String(value)),
   }
 }
 

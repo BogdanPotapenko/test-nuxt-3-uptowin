@@ -1,13 +1,14 @@
 import type { SortField, User } from '~/types/user'
 import {
+  DEFAULT_PER_PAGE,
   DEFAULT_SORT_DIRECTION,
   PER_PAGE_AUTO,
-  PER_PAGE_OPTIONS,
+  PER_PAGE_CHOICES,
   ROLES,
   SORT_DIRECTIONS,
   SORT_FIELDS,
 } from '~/types/user'
-import { enumCodec, nullableEnumCodec, numericEnumCodec, pageCodec, searchCodec } from '~/utils/query'
+import { nullableEnumCodec, optionCodec, pageCodec, searchCodec } from '~/utils/query'
 import { filterUsers, paginate, sortUsers } from '~/utils/users'
 import { clamp } from '~/utils/number'
 
@@ -24,13 +25,13 @@ export function useUsersTable(
     reset: ['page'],
   })
   const role = useRouteQuery('role', nullableEnumCodec(ROLES), { reset: ['page'] })
-  const perPage = useRouteQuery('perPage', numericEnumCodec(PER_PAGE_OPTIONS, PER_PAGE_AUTO), {
+  const perPage = useRouteQuery('perPage', optionCodec(PER_PAGE_CHOICES, DEFAULT_PER_PAGE), {
     reset: ['page'],
   })
 
   const requestedPage = useRouteQuery('page', pageCodec())
   const sortField = useRouteQuery('sortBy', nullableEnumCodec(SORT_FIELDS))
-  const sortOrder = useRouteQuery('sortDir', enumCodec(SORT_DIRECTIONS, DEFAULT_SORT_DIRECTION))
+  const sortOrder = useRouteQuery('sortDir', optionCodec(SORT_DIRECTIONS, DEFAULT_SORT_DIRECTION))
 
   const resolvedPerPage = computed(() =>
     perPage.value === PER_PAGE_AUTO ? Math.max(1, toValue(autoPageSize)) : perPage.value,
