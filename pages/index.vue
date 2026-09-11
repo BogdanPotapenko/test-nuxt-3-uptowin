@@ -1,68 +1,63 @@
 <template>
-  <UserFilters
-    :search="search"
-    :role="role"
-    :perPage="perPage"
-    @update:search="search = $event"
-    @update:role="role = $event"
-    @update:perPage="perPage = $event"
-  />
+  <section class="users">
+    <UserFilters
+      v-model:search="search"
+      v-model:role="role"
+      v-model:per-page="perPage"
+      :per-page-options="perPageOptions"
+      :can-reset="hasActiveFilters"
+      @reset="resetFilters"
+    />
 
-  <UserTable
-    :users="paginatedUsers"
-    @sort="onSort"
-  />
-
-  <div class="pagination">
-    <button
-      @click="page--"
-      :disabled="page === 1"
+    <UserTable
+      :users="users"
+      :sort-by="sortBy"
+      :sort-direction="sortDirection"
+      @sort="toggleSort"
     >
-      Prev
-    </button>
+      <template #empty>
+        No users match the current filters.
+      </template>
+    </UserTable>
 
-    <span>{{ page }} / {{ totalPages }}</span>
-
-    <button
-      @click="page++"
-      :disabled="page === totalPages"
-    >
-      Next
-    </button>
-  </div>
+    <UserPagination
+      :page="page"
+      :total-pages="totalPages"
+      :total-items="totalItems"
+      :from="from"
+      :to="to"
+      @change="goToPage"
+    />
+  </section>
 </template>
 
-<script setup>
-import { users } from '~/data/users'
-import { useUsersTable } from '~/composables/useUsersTable'
+<script setup lang="ts">
+import { users as allUsers } from '~/data/users'
 
 const {
   search,
   role,
+  perPage,
+  perPageOptions,
   sortBy,
   sortDirection,
+  toggleSort,
+  users,
   page,
-  perPage,
-  paginatedUsers,
   totalPages,
-} = useUsersTable(users)
-
-function onSort(field) {
-  if (sortBy.value === field) {
-    sortDirection.value =
-      sortDirection.value === 'asc' ? 'desc' : 'asc'
-  } else {
-    sortBy.value = field
-    sortDirection.value = 'asc'
-  }
-}
+  totalItems,
+  from,
+  to,
+  hasActiveFilters,
+  goToPage,
+  resetFilters,
+} = useUsersTable(allUsers)
 </script>
 
 <style scoped>
-.pagination {
-  margin-top: 12px;
+.users {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  flex-direction: column;
+  gap: 16px;
 }
 </style>
