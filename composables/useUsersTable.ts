@@ -1,6 +1,5 @@
 import type { SortField, User } from '~/types/user'
 import {
-  DEFAULT_PER_PAGE,
   DEFAULT_SORT_DIRECTION,
   PER_PAGE_AUTO,
   PER_PAGE_CHOICES,
@@ -25,7 +24,7 @@ export function useUsersTable(
     reset: ['page'],
   })
   const role = useRouteQuery('role', nullableEnumCodec(ROLES), { reset: ['page'] })
-  const perPage = useRouteQuery('perPage', optionCodec(PER_PAGE_CHOICES, DEFAULT_PER_PAGE), {
+  const perPage = useRouteQuery('perPage', optionCodec(PER_PAGE_CHOICES, PER_PAGE_AUTO), {
     reset: ['page'],
   })
 
