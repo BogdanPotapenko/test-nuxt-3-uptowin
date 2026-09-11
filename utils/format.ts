@@ -10,3 +10,7 @@ export function formatDate(iso: string): string {
 
   return Number.isNaN(timestamp) ? '—' : dateFormatter.format(timestamp)
 }
+
+export function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
