@@ -106,7 +106,8 @@ function sortIconFor(field: SortField): string {
 
 <style scoped>
 .table-wrapper {
-  max-height: 440px;
+  flex: 1;
+  min-height: 240px;
   overflow: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius);

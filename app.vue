@@ -9,7 +9,7 @@
       <ThemeToggle />
     </header>
 
-    <main>
+    <main class="layout__main">
       <NuxtPage />
     </main>
   </div>
@@ -27,9 +27,20 @@ useHead({
 
 <style scoped>
 .layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
   max-width: 1040px;
   margin: 0 auto;
-  padding: 32px 20px 64px;
+  padding: 32px 20px;
+}
+
+.layout__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .layout__header {

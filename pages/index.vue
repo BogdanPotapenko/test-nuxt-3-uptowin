@@ -57,7 +57,9 @@ const {
 <style scoped>
 .users {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 16px;
+  min-height: 0;
 }
 </style>
