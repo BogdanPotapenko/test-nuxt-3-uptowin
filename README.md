@@ -1,6 +1,13 @@
-# Nuxt Minimal Starter
+# Users table
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Live demo: https://bogdanpotapenko.github.io/test-nuxt-3-uptowin/
+
+Filtering by role and search, sorting by age and creation date, pagination with an
+auto page size that fits the viewport, sticky table header, light/dark theme.
+All table state lives in the URL query string, so reloading or sharing a link
+restores it.
+
+Requires Node 20.19+ (Nuxt 4). Deployed from `main` by `.github/workflows/deploy.yml`.
 
 ## Setup
 

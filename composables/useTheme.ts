@@ -18,6 +18,10 @@ export function useTheme() {
 
   const theme = useState<Theme>('theme', () => normalizeTheme(cookie.value))
 
+  if (import.meta.client && normalizeTheme(cookie.value) !== theme.value) {
+    theme.value = normalizeTheme(cookie.value)
+  }
+
   function setTheme(value: Theme): void {
     theme.value = value
     cookie.value = value
