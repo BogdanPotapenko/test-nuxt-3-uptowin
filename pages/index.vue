@@ -3,8 +3,6 @@
     <UserFilters
       v-model:search="search"
       v-model:role="role"
-      v-model:per-page="perPage"
-      :per-page-options="perPageOptions"
       :can-reset="hasActiveFilters"
       @reset="resetFilters"
     />
@@ -21,11 +19,13 @@
     </UserTable>
 
     <UserPagination
+      v-model:per-page="perPage"
       :page="page"
       :total-pages="totalPages"
       :total-items="totalItems"
       :from="from"
       :to="to"
+      :per-page-options="perPageOptions"
       @change="goToPage"
     />
   </section>

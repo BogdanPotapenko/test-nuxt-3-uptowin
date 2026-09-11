@@ -20,13 +20,6 @@
       empty-label="All roles"
     />
 
-    <BaseSelect
-      label="Per page"
-      :model-value="perPage"
-      :options="perPageOptions"
-      @update:model-value="onPerPageChange"
-    />
-
     <button
       type="button"
       class="button filters__reset"
@@ -39,14 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import type { PerPage, Role } from '~/types/user'
-import { PER_PAGE_OPTIONS, ROLES } from '~/types/user'
+import type { Role } from '~/types/user'
+import { ROLES } from '~/types/user'
 import { capitalize } from '~/utils/format'
 
 const SEARCH_DEBOUNCE_MS = 300
 
 defineProps<{
-  perPageOptions: readonly PerPage[]
   canReset: boolean
 }>()
 
@@ -54,7 +46,6 @@ const emit = defineEmits<{ reset: [] }>()
 
 const search = defineModel<string>('search', { required: true })
 const role = defineModel<Role | null>('role', { required: true })
-const perPage = defineModel<PerPage>('perPage', { required: true })
 
 const roleOptions = ROLES.map(value => ({ value, label: capitalize(value) }))
 
@@ -72,10 +63,6 @@ watch(search, (value) => {
   commitSearch.cancel()
   inputValue.value = value
 })
-
-function onPerPageChange(value: PerPage | null): void {
-  if (value !== null) perPage.value = value
-}
 </script>
 
 <style scoped>

@@ -1,5 +1,8 @@
 <template>
-  <label class="field">
+  <label
+    class="field"
+    :class="{ 'field--inline': inline }"
+  >
     <span class="field__label">{{ label }}</span>
 
     <select
@@ -33,10 +36,12 @@ const props = withDefaults(
     options: readonly (T | SelectOption<T>)[]
     allowEmpty?: boolean
     emptyLabel?: string
+    inline?: boolean
   }>(),
   {
     allowEmpty: false,
     emptyLabel: 'All',
+    inline: false,
   },
 )
 

@@ -3,17 +3,27 @@
     class="pagination"
     aria-label="Pagination"
   >
-    <p
-      class="pagination__summary"
-      aria-live="polite"
-    >
-      <template v-if="totalItems === 0">
-        No results
-      </template>
-      <template v-else>
-        Showing {{ from }}–{{ to }} of {{ totalItems }}
-      </template>
-    </p>
+    <div class="pagination__status">
+      <p
+        class="pagination__summary"
+        aria-live="polite"
+      >
+        <template v-if="totalItems === 0">
+          No results
+        </template>
+        <template v-else>
+          Showing {{ from }}–{{ to }} of {{ totalItems }}
+        </template>
+      </p>
+
+      <BaseSelect
+        label="Per page"
+        :model-value="perPage"
+        :options="perPageOptions"
+        inline
+        @update:model-value="onPerPageChange"
+      />
+    </div>
 
     <ul class="pagination__list">
       <li>
@@ -65,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import type { PerPage } from '~/types/user'
 import { PAGE_ELLIPSIS, buildPageItems } from '~/utils/pagination'
 
 const props = defineProps<{
@@ -73,11 +84,18 @@ const props = defineProps<{
   totalItems: number
   from: number
   to: number
+  perPageOptions: readonly PerPage[]
 }>()
 
 const emit = defineEmits<{ change: [page: number] }>()
 
+const perPage = defineModel<PerPage>('perPage', { required: true })
+
 const items = computed(() => buildPageItems(props.page, props.totalPages))
+
+function onPerPageChange(value: PerPage | null): void {
+  if (value !== null) perPage.value = value
+}
 </script>
 
 <style scoped>
@@ -87,6 +105,13 @@ const items = computed(() => buildPageItems(props.page, props.totalPages))
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+.pagination__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
 }
 
 .pagination__summary {
