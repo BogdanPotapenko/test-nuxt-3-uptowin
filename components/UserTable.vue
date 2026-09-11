@@ -1,5 +1,8 @@
 <template>
-  <div class="table-wrapper">
+  <div
+    ref="wrapper"
+    class="table-wrapper"
+  >
     <table class="table">
       <caption class="visually-hidden">
         Users list
@@ -41,6 +44,7 @@
         <tr
           v-for="user in users"
           :key="user.id"
+          data-row
         >
           <td>{{ user.name }}</td>
           <td class="table__muted">{{ user.email }}</td>
@@ -88,7 +92,17 @@ const props = defineProps<{
   sortDirection: SortDirection
 }>()
 
-const emit = defineEmits<{ sort: [field: SortField] }>()
+const emit = defineEmits<{
+  sort: [field: SortField]
+  capacity: [rows: number]
+}>()
+
+const wrapper = useTemplateRef<HTMLElement>('wrapper')
+const capacity = useTableCapacity(wrapper, () => props.users.length)
+
+watch(capacity, (rows) => {
+  if (rows > 0) emit('capacity', rows)
+})
 
 function ariaSortFor(field: SortField | undefined): 'ascending' | 'descending' | 'none' | undefined {
   if (field === undefined) return undefined

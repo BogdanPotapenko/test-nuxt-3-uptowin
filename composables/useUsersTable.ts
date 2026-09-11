@@ -1,7 +1,7 @@
 import type { SortField, User } from '~/types/user'
 import {
-  DEFAULT_PER_PAGE,
   DEFAULT_SORT_DIRECTION,
+  PER_PAGE_AUTO,
   PER_PAGE_OPTIONS,
   ROLES,
   SORT_DIRECTIONS,
@@ -13,7 +13,10 @@ import { clamp } from '~/utils/number'
 
 const SEARCH_MAX_LENGTH = 100
 
-export function useUsersTable(source: MaybeRefOrGetter<readonly User[]>) {
+export function useUsersTable(
+  source: MaybeRefOrGetter<readonly User[]>,
+  autoPageSize: MaybeRefOrGetter<number>,
+) {
   const applyQueryPatch = useQueryPatch()
 
   const search = useRouteQuery('search', searchCodec(SEARCH_MAX_LENGTH), {
@@ -21,18 +24,23 @@ export function useUsersTable(source: MaybeRefOrGetter<readonly User[]>) {
     reset: ['page'],
   })
   const role = useRouteQuery('role', nullableEnumCodec(ROLES), { reset: ['page'] })
-  const perPage = useRouteQuery('perPage', numericEnumCodec(PER_PAGE_OPTIONS, DEFAULT_PER_PAGE), {
+  const perPage = useRouteQuery('perPage', numericEnumCodec(PER_PAGE_OPTIONS, PER_PAGE_AUTO), {
     reset: ['page'],
   })
+
   const requestedPage = useRouteQuery('page', pageCodec())
   const sortField = useRouteQuery('sortBy', nullableEnumCodec(SORT_FIELDS))
   const sortOrder = useRouteQuery('sortDir', enumCodec(SORT_DIRECTIONS, DEFAULT_SORT_DIRECTION))
+
+  const resolvedPerPage = computed(() =>
+    perPage.value === PER_PAGE_AUTO ? Math.max(1, toValue(autoPageSize)) : perPage.value,
+  )
 
   const filtered = computed(() =>
     filterUsers(toValue(source), { search: search.value, role: role.value }),
   )
   const sorted = computed(() => sortUsers(filtered.value, sortField.value, sortOrder.value))
-  const result = computed(() => paginate(sorted.value, requestedPage.value, perPage.value))
+  const result = computed(() => paginate(sorted.value, requestedPage.value, resolvedPerPage.value))
 
   function toggleSort(field: SortField): void {
     if (sortField.value !== field) {
@@ -67,7 +75,6 @@ export function useUsersTable(source: MaybeRefOrGetter<readonly User[]>) {
     search,
     role,
     perPage,
-    perPageOptions: PER_PAGE_OPTIONS,
     sortBy: computed(() => sortField.value),
     sortDirection: computed(() => sortOrder.value),
     toggleSort,

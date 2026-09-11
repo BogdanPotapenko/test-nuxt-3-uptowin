@@ -10,6 +10,9 @@ export type SortDirection = (typeof SORT_DIRECTIONS)[number]
 export const PER_PAGE_OPTIONS = [10, 15, 20] as const
 export type PerPage = (typeof PER_PAGE_OPTIONS)[number]
 
+export const PER_PAGE_AUTO = 'auto'
+export type PerPageOption = PerPage | typeof PER_PAGE_AUTO
+
 export const DEFAULT_PER_PAGE: PerPage = 10
 export const DEFAULT_SORT_DIRECTION: SortDirection = 'asc'
 

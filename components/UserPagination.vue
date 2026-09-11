@@ -19,7 +19,7 @@
       <BaseSelect
         label="Per page"
         :model-value="perPage"
-        :options="perPageOptions"
+        :options="options"
         inline
         @update:model-value="onPerPageChange"
       />
@@ -75,7 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import type { PerPage } from '~/types/user'
+import type { SelectOption } from '~/types/ui'
+import type { PerPageOption } from '~/types/user'
+import { PER_PAGE_AUTO, PER_PAGE_OPTIONS } from '~/types/user'
 import { PAGE_ELLIPSIS, buildPageItems } from '~/utils/pagination'
 
 const props = defineProps<{
@@ -84,16 +86,20 @@ const props = defineProps<{
   totalItems: number
   from: number
   to: number
-  perPageOptions: readonly PerPage[]
 }>()
 
 const emit = defineEmits<{ change: [page: number] }>()
 
-const perPage = defineModel<PerPage>('perPage', { required: true })
+const perPage = defineModel<PerPageOption>('perPage', { required: true })
+
+const options: SelectOption<PerPageOption>[] = [
+  { value: PER_PAGE_AUTO, label: 'Auto' },
+  ...PER_PAGE_OPTIONS.map(value => ({ value, label: String(value) })),
+]
 
 const items = computed(() => buildPageItems(props.page, props.totalPages))
 
-function onPerPageChange(value: PerPage | null): void {
+function onPerPageChange(value: PerPageOption | null): void {
   if (value !== null) perPage.value = value
 }
 </script>

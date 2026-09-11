@@ -39,7 +39,10 @@ export function nullableEnumCodec<T extends string>(allowed: readonly T[]): Quer
   }
 }
 
-export function numericEnumCodec<T extends number>(allowed: readonly T[], fallback: T): QueryCodec<T> {
+export function numericEnumCodec<T extends number, F extends string | number = T>(
+  allowed: readonly T[],
+  fallback: F,
+): QueryCodec<T | F> {
   return {
     parse: (raw) => {
       const value = firstQueryValue(raw)

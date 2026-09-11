@@ -12,6 +12,7 @@
       :sort-by="sortBy"
       :sort-direction="sortDirection"
       @sort="toggleSort"
+      @capacity="autoPageSize = $event"
     >
       <template #empty>
         No users match the current filters.
@@ -25,20 +26,21 @@
       :total-items="totalItems"
       :from="from"
       :to="to"
-      :per-page-options="perPageOptions"
       @change="goToPage"
     />
   </section>
 </template>
 
 <script setup lang="ts">
+import { DEFAULT_PER_PAGE } from '~/types/user'
 import { users as allUsers } from '~/data/users'
+
+const autoPageSize = ref<number>(DEFAULT_PER_PAGE)
 
 const {
   search,
   role,
   perPage,
-  perPageOptions,
   sortBy,
   sortDirection,
   toggleSort,
@@ -51,7 +53,7 @@ const {
   hasActiveFilters,
   goToPage,
   resetFilters,
-} = useUsersTable(allUsers)
+} = useUsersTable(allUsers, autoPageSize)
 </script>
 
 <style scoped>
