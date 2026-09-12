@@ -92,16 +92,24 @@ watch(search, (value) => {
     padding: 12px;
   }
 
-  .filters__search {
-    flex: 1 1 100%;
+  .filters .field {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
-  .filters .field {
-    flex: 1 1 auto;
+  .filters .filters__search {
+    flex: 2 1 0;
   }
 
   .filters__reset {
+    flex: 0 0 auto;
     margin-left: 0;
+  }
+}
+
+@media (max-width: 390px) {
+  .filters .filters__search {
+    flex: 1 1 100%;
   }
 }
 </style>
